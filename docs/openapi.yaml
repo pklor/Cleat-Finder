@@ -1,0 +1,331 @@
+openapi: 3.0.3
+info:
+  title: Cleat Finder API
+  version: 1.0.0
+  description: |
+    A secure REST API for performing all CRUD operations on the Cleat Finder database.
+    Clients interact through these endpoints instead of accessing Supabase directly.
+    Covers profiles, players, teams, clubs, leagues, posts, quizzes, and notifications.
+
+servers:
+  - url: https://api.cleatfinder.com/v1
+    description: Production server
+  - url: http://localhost:4000/v1
+    description: Local development server
+
+paths:
+  /profiles:
+    get:
+      summary: Retrieve all user profiles
+      responses:
+        '200':
+          description: List of profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Profile' }
+    post:
+      summary: Create a new profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProfileInput' }
+      responses:
+        '201': { description: Profile created }
+
+  /profiles/{user_id}:
+    get:
+      summary: Get a specific profile by user ID
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Profile found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Profile' }
+        '404': { description: Profile not found }
+    put:
+      summary: Update an existing profile
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProfileInput' }
+      responses:
+        '200': { description: Profile updated }
+    delete:
+      summary: Delete a profile
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Profile deleted }
+
+  /players:
+    get:
+      summary: List all players
+      responses:
+        '200':
+          description: All players
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Player' }
+    post:
+      summary: Add a new player
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlayerInput' }
+      responses:
+        '201': { description: Player added }
+
+  /players/{player_id}:
+    get:
+      summary: Retrieve a single player
+      parameters:
+        - in: path
+          name: player_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: Player found }
+        '404': { description: Player not found }
+    put:
+      summary: Update a player
+      parameters:
+        - in: path
+          name: player_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlayerInput' }
+      responses:
+        '200': { description: Player updated }
+    delete:
+      summary: Delete a player
+      parameters:
+        - in: path
+          name: player_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Player deleted }
+
+  /teams:
+    get:
+      summary: Retrieve all teams
+      responses:
+        '200':
+          description: All teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Team' }
+    post:
+      summary: Create a team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TeamInput' }
+      responses:
+        '201': { description: Team created }
+
+  /teams/{team_id}:
+    get:
+      summary: Retrieve a team
+      parameters:
+        - in: path
+          name: team_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: Team found }
+        '404': { description: Team not found }
+    put:
+      summary: Update a team
+      parameters:
+        - in: path
+          name: team_id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TeamInput' }
+      responses:
+        '200': { description: Team updated }
+    delete:
+      summary: Delete a team
+      parameters:
+        - in: path
+          name: team_id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Team deleted }
+
+  /posts:
+    get:
+      summary: Get all posts
+      responses:
+        '200':
+          description: List of posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Post' }
+    post:
+      summary: Create a new post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PostInput' }
+      responses:
+        '201': { description: Post created }
+
+  /quizzes:
+    get:
+      summary: Retrieve all quizzes
+      responses:
+        '200':
+          description: All quizzes
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Quiz' }
+    post:
+      summary: Add a new quiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/QuizInput' }
+      responses:
+        '201': { description: Quiz created }
+
+  /notifications:
+    get:
+      summary: List all notifications
+      responses:
+        '200':
+          description: All notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Notification' }
+
+components:
+  schemas:
+    Profile:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        user_id: { type: string, format: uuid }
+        handle: { type: string }
+        display_name: { type: string }
+        avatar_url: { type: string }
+        bio: { type: string }
+
+    ProfileInput:
+      type: object
+      required: [user_id, handle]
+      properties:
+        user_id: { type: string, format: uuid }
+        handle: { type: string }
+        display_name: { type: string }
+        avatar_url: { type: string }
+        bio: { type: string }
+
+    Player:
+      type: object
+      properties:
+        player_id: { type: string, format: uuid }
+        player_first_name: { type: string }
+        player_last_name: { type: string }
+        player_birthday: { type: string, format: date }
+
+    PlayerInput:
+      type: object
+      required: [player_first_name, player_last_name]
+      properties:
+        player_first_name: { type: string }
+        player_last_name: { type: string }
+        player_birthday: { type: string, format: date }
+
+    Team:
+      type: object
+      properties:
+        team_id: { type: string, format: uuid }
+        team_name: { type: string }
+        team_founded: { type: string, format: date }
+
+    TeamInput:
+      type: object
+      required: [team_name]
+      properties:
+        team_name: { type: string }
+        team_founded: { type: string, format: date }
+
+    Post:
+      type: object
+      properties:
+        post_id: { type: string, format: uuid }
+        post_title: { type: string }
+        post_body: { type: string }
+        created_at: { type: string, format: date-time }
+
+    PostInput:
+      type: object
+      required: [post_title, post_body]
+      properties:
+        post_title: { type: string }
+        post_body: { type: string }
+
+    Quiz:
+      type: object
+      properties:
+        quiz_id: { type: string, format: uuid }
+        quiz_title: { type: string }
+        quiz_category: { type: string }
+        quiz_content: { type: string }
+
+    QuizInput:
+      type: object
+      required: [quiz_title]
+      properties:
+        quiz_title: { type: string }
+        quiz_category: { type: string }
+        quiz_content: { type: string }
+
+    Notification:
+      type: object
+      properties:
+        notification_id: { type: string, format: uuid }
+        notification_content: { type: string }
+        notification_timestamp: { type: string, format: date-time }
