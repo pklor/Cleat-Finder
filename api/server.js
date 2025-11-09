@@ -9,11 +9,15 @@ import teamsRoutes from "./routes/teams.js";
 import postsRoutes from "./routes/posts.js";
 import profilesRoutes from "./routes/profiles.js";
 import quizzesRoutes from "./routes/quizzes.js";
+import favoritesRoutes from "./routes/favorites.js";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174'],
+  credentials: true
+}));
 app.use(express.json());
 
 //  Connect to Supabase
@@ -30,6 +34,7 @@ app.use("/teams", teamsRoutes);
 app.use("/posts", postsRoutes);
 app.use("/profiles", profilesRoutes);
 app.use("/quizzes", quizzesRoutes);
+app.use("/favorites", favoritesRoutes);
 
 //  Start server
 const PORT = process.env.PORT || 5000;
